@@ -29,7 +29,7 @@ const AppWrapper = () => {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/registerpatient" element={<RegisterPatient />} />
       <Route path="/surgicalcases" element={<SurgicalCases />} />
-      <Route path="/checklist" element={<PrePostChecklist />} />
+      <Route path="/checklist/:id" element={<PrePostChecklist />} />
       <Route path="/add-case" element={<AddCase />} />
     </Routes>
     </>

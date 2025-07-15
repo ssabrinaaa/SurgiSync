@@ -50,7 +50,7 @@ const AddCase = () => {
                   : field.charAt(0).toUpperCase() + field.slice(1)}
               </label>
               <input
-                type={field === "date" ? "date" : "text"}
+                type={field === "date" ? "date" : field === "time" ? "time" : "text"}
                 name={field}
                 id={field}
                 value={formData[field]}

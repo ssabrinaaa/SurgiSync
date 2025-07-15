@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"
 
 const SurgicalCases = () => {
+  const navigate = useNavigate();
   const [cases] = useState([
     {
       id: "C123",
@@ -29,7 +31,9 @@ const SurgicalCases = () => {
 
       <div className="bg-white w-full max-w-4xl p-6 rounded-2xl shadow-md mb-6 space-y-6">
         {cases.map((c, index) => (
-          <div key={index} className="border-b pb-4 last:border-b-0">
+          <div key={index}
+           className="border-b pb-4 last:border-b-0"
+           onClick={() => navigate(`/checklist/${c.id}`, { state: { patient: c.patient, procedure: c.procedure } })}>
             <p><strong>Case ID:</strong> {c.id}</p>
             <p><strong>Patient:</strong> {c.patient}</p>
             <p><strong>Procedure:</strong> {c.procedure}</p>
@@ -40,7 +44,10 @@ const SurgicalCases = () => {
         ))}
       </div>
 
-      <button className="bg-teal-700 text-white font-semibold px-6 py-2 rounded-md hover:bg-teal-800 transition">
+      <button
+        onClick={() => navigate("/add-case")}
+        className="bg-teal-700 text-white font-semibold px-6 py-2 rounded-md hover:bg-teal-800 transition"
+      >
         Add new cases
       </button>
     </div>

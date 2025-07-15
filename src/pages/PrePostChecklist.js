@@ -1,6 +1,10 @@
 import React from "react";
+import { useLocation, useParams } from "react-router-dom";
 
 const PrePostChecklist = () => {
+  const { id } = useParams();
+  const { state } = useLocation();
+
   const preOpItems = [
     "Confirm patient identity",
     "Review medical history",
@@ -25,9 +29,9 @@ const PrePostChecklist = () => {
       </p>
 
       <div className="bg-white rounded-xl shadow-md max-w-xs md:max-w-md mx-auto p-4 mb-8 text-left text-sm text-gray-800 leading-relaxed">
-        <p><strong>Case ID:</strong> 345327</p>
-        <p><strong>Patient:</strong> Jayden</p>
-        <p><strong>Procedure:</strong> Appendix</p>
+        <p><strong>Case ID:</strong> {id}</p>
+        <p><strong>Patient:</strong> {state?.patient || "N/A"}</p>
+        <p><strong>Procedure:</strong> {state?.procedure || "N/A"}</p>
       </div>
 
       <div className="bg-white rounded-xl shadow-md max-w-3xl mx-auto p-6 mb-6 text-left">
@@ -35,10 +39,7 @@ const PrePostChecklist = () => {
           Pre-Op Checklist
         </h2>
         {preOpItems.map((item, index) => (
-          <label
-            key={index}
-            className="block text-gray-700 text-base mb-3"
-          >
+          <label key={index} className="block text-gray-700 text-base mb-3">
             <input type="checkbox" className="mr-2" />
             {item}
           </label>
@@ -50,10 +51,7 @@ const PrePostChecklist = () => {
           Post-Op Checklist
         </h2>
         {postOpItems.map((item, index) => (
-          <label
-            key={index}
-            className="block text-gray-700 text-base mb-3"
-          >
+          <label key={index} className="block text-gray-700 text-base mb-3">
             <input type="checkbox" className="mr-2" />
             {item}
           </label>
