@@ -1,31 +1,37 @@
-import React, { useState } from "react";
+// src/pages/AddCase.js
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../api";
 
 const AddCase = () => {
   const [formData, setFormData] = useState({
-    caseId: "",
-    patient: "",
-    procedure: "",
+    patientId: "",
+    procedureId: "",
     date: "",
     time: "",
     status: "",
+    preOp: [],
+    postOp: []
   });
-
+  const [patients, setPatients]     = useState([]);
+  const [procedures, setProcedures] = useState([]);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    api.get("/patients").then(r => setPatients(r.data));
+    api.get("/procedures").then(r => setProcedures(r.data));
+  }, []);
+
+  const handleChange = e => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log("New Case Added:", formData);
-    // TODO: Send to backend
-    navigate("/cases"); // Go back to Surgical Cases list
+    // backend will generate the case ID
+    await api.post("/cases", formData);
+    navigate("/surgicalCases");
   };
 
   return (
@@ -39,29 +45,83 @@ const AddCase = () => {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {["caseId", "patient", "procedure", "date", "time"].map((field) => (
-            <div key={field}>
-              <label
-                htmlFor={field}
-                className="block text-left mb-1 capitalize"
-              >
-                {field === "caseId"
-                  ? "Case ID"
-                  : field.charAt(0).toUpperCase() + field.slice(1)}
-              </label>
-              <input
-                type={field === "date" ? "date" : field === "time" ? "time" : "text"}
-                name={field}
-                id={field}
-                value={formData[field]}
-                onChange={handleChange}
-                className="w-full border rounded-md px-3 py-2"
-                required
-              />
-            </div>
-          ))}
+          {/* Patient dropdown */}
+          <div>
+            <label htmlFor="patientId" className="block text-left mb-1">
+              Patient
+            </label>
+            <select
+              id="patientId"
+              name="patientId"
+              value={formData.patientId}
+              onChange={handleChange}
+              className="w-full border rounded-md px-3 py-2"
+              required
+            >
+              <option value="">– select patient –</option>
+              {patients.map(p => (
+                <option key={p.patient_id} value={p.patient_id}>
+                  {p.firstName} {p.lastName}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          {/* Status field as a dropdown */}
+          {/* Procedure dropdown */}
+          <div>
+            <label htmlFor="procedureId" className="block text-left mb-1">
+              Procedure
+            </label>
+            <select
+              id="procedureId"
+              name="procedureId"
+              value={formData.procedureId}
+              onChange={handleChange}
+              className="w-full border rounded-md px-3 py-2"
+              required
+            >
+              <option value="">– select procedure –</option>
+              {procedures.map(proc => (
+                <option key={proc.procedure_id} value={proc.procedure_id}>
+                  {proc.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Date */}
+          <div>
+            <label htmlFor="date" className="block text-left mb-1">
+              Date
+            </label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              className="w-full border rounded-md px-3 py-2"
+              required
+            />
+          </div>
+
+          {/* Time */}
+          <div>
+            <label htmlFor="time" className="block text-left mb-1">
+              Time
+            </label>
+            <input
+              type="time"
+              id="time"
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
+              className="w-full border rounded-md px-3 py-2"
+              required
+            />
+          </div>
+
+          {/* Status */}
           <div>
             <label htmlFor="status" className="block text-left mb-1">
               Status
